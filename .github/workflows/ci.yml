@@ -9,7 +9,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     container:
-      image: knapsu/plex-media-player-appimage:xenial
+      image: knapsu/plex-media-player-appimage:focal
       options: --privileged --device /dev/fuse
     steps:
       - name: Checkout code
@@ -27,17 +27,8 @@ jobs:
     name: Publish
     needs: build
     runs-on: ubuntu-latest
-    env:
-      SCP_USER: ${{ secrets.SCP_USER }}
-      SCP_SERVER: ${{ secrets.SCP_SERVER }}
-      SCP_PATH: ${{ secrets.SCP_PATH }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
       - name: Upload package
-        run: ./scripts/upload.sh --scp
+        run: ./scripts/upload.sh --transfer

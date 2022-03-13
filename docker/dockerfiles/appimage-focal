@@ -1,0 +1,74 @@
+FROM ubuntu:focal
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+ADD assets/dpkg_nodoc /etc/dpkg/dpkg.cfg.d/90_nodoc
+ADD assets/dpkg_nolocale /etc/dpkg/dpkg.cfg.d/90_nolocale
+ADD assets/apt_nocache /etc/apt/apt.conf.d/90_nocache
+ADD assets/apt_mindeps /etc/apt/apt.conf.d/90_mindeps
+
+# Add package repositories
+RUN set -e \
+  && apt-get update \
+  && apt-get install -y \
+    apt-transport-https \
+    nano \
+    vim \
+    curl \
+    wget \
+  && apt-get install -y software-properties-common \
+  && add-apt-repository -y ppa:beineri/opt-qt-5.12.9-focal \
+  && add-apt-repository -y ppa:git-core/ppa \
+  && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc | gpg --dearmor - > /etc/apt/trusted.gpg.d/kitware.gpg \
+  && add-apt-repository "deb https://apt.kitware.com/ubuntu/ focal main" \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -rf /tmp/* /var/tmp/* /var/log/*
+
+# Install development tools and libraries
+RUN set -e \
+  && apt-get update \
+  && apt-get install -y \
+    jq \
+    git \
+    cmake \
+    build-essential \
+    autoconf \
+    automake \
+    libtool \
+    libharfbuzz-dev \
+    libfreetype6-dev \
+    libfontconfig1-dev \
+    libx11-dev \
+    libxrandr-dev \
+    libvdpau-dev \
+    libva-dev \
+    mesa-common-dev \
+    libegl1-mesa-dev \
+    libasound2-dev \
+    libpulse-dev \
+    libuchardet-dev \
+    zlib1g-dev \
+    libfribidi-dev \
+    libgnutls28-dev \
+    libgl1-mesa-dev \
+    libsdl2-dev \
+    qt512base \
+    qt512quickcontrols \
+    qt512tools \
+    qt512translations \
+    qt512webchannel \
+    qt512webengine \
+    qt512x11extras \
+    libcec-dev \
+    libjpeg-dev \
+    libvulkan-dev \
+    libgbm-dev \
+    liblcms2-dev \
+    yasm \
+    wayland-protocols \
+    fuse \
+    ccache \
+    gnupg-agent \
+  && ln -s /usr/bin/python3 /usr/bin/python \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -rf /tmp/* /var/tmp/* /var/log/*
