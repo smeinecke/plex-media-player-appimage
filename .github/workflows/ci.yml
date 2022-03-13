@@ -23,12 +23,8 @@ jobs:
           restore-keys: cache-
       - name: Run build script
         run: ./scripts/build.sh
-  publish:
-    name: Publish
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Upload package
-        run: ./scripts/upload.sh --transfer
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v3
+        with:
+          name: plex-media-player-appimage
+          path: ./*.AppImage
