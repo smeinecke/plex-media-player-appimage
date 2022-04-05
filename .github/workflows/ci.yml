@@ -24,8 +24,7 @@ jobs:
           restore-keys: cache-
       - name: Run build script
         run: ./scripts/build.sh
-      - name: Upload AppImage
-        uses: actions/upload-artifact@v3
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          name: plex-media-player-appimage
-          path: ./*.AppImage
+          files: ./*.AppImage
